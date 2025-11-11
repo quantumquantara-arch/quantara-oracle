@@ -1,39 +1,42 @@
 import streamlit as st
-import requests
 import pandas as pd
 import numpy as np
 import os
+from datetime import datetime, timedelta
+from entsoe import EntsoePandasClient
 
 st.set_page_config(page_title="Quantara Oracle", layout="centered")
 st.title("Quantara Oracle")
-st.markdown("*Live coherence audit of the U.S. energy grid*")
+st.markdown("*Live coherence audit of the European energy grid*")
 
-# === GET EIA DATA ===
-API_KEY = os.environ.get("EIA_KEY", "demo")
-url = f"https://api.eia.gov/v2/electricity/rto/region-data/data/?api_key={API_KEY}&frequency=hourly&data[0]=value&facets[region-id][]=US48&start=2025-11-10T00&sort[0][column]=period"
+# === GET ENTSO-E DATA (Germany Day-Ahead Prices) ===
+client = EntsoePandasClient(api_key=None)  # Public access, no key needed
+
+start = pd.Timestamp('20251110', tz='Europe/Berlin')
+end = pd.Timestamp('20251111', tz='Europe/Berlin')
 
 try:
-    data = requests.get(url).json()['response']['data']
-    df = pd.DataFrame(data)
-    df['period'] = pd.to_datetime(df['period'])
-    latest = df.iloc[0]
-    demand = float(latest['value'])
-    st.success(f"Live U.S. Demand: **{demand:,.0f} MWh**")
-except:
-    demand = 400000
-    st.warning("Using demo data")
+    df = client.query_day_ahead_prices('DE', start=start, end=end)
+    latest_price = df.iloc[-1]  # Most recent available
+    price = float(latest_price)
+    st.success(f"Live DE Day-Ahead Price: **{price:,.2f} EUR/MWh**")
+except Exception as e:
+    price = 95.50
+    st.warning("Using demo data (public ENTSO-E access limited)")
 
-# === VEYN COHERENCE ===
-def veyn_coherence(demand, steps=24):
+# === VEYN COHERENCE ENGINE ===
+def veyn_coherence(price, steps=24):
     tau = 0.8
     memory = [tau]
     for _ in range(steps):
         drift = -0.002 * tau + np.random.normal(0, 0.005)
-        tau = np.clip(tau + drift + (1 - demand/500000)*0.1, 0.0, 1.0)
+        # Normalize price impact: high volatility = lower coherence
+        volatility = abs(price - 100) / 100
+        tau = np.clip(tau + drift - volatility * 0.15, 0.0, 1.0)
         memory.append(tau)
     return memory[-1], memory
 
-final_tau, path = veyn_coherence(demand)
+final_tau, path = veyn_coherence(price)
 kappa = round(final_tau, 3)
 
 # === EBI AUDIT ===
@@ -43,10 +46,11 @@ color = "green" if kappa >= 0.7 else "red"
 st.metric("κ Coherence Score", kappa, delta=f"{kappa-0.8:+.3f}")
 st.write(f"**EBI Audit: <span style='color:{color}'>{status}</span>**", unsafe_allow_html=True)
 
-# === PLOT ===
+# === 24-HOUR FORECAST PLOT ===
 st.line_chart(path, use_container_width=True)
-st.caption("24-hour coherence forecast (conceptual)")
+st.caption("24-hour coherence forecast (Germany day-ahead prices)")
 
 # === FOOTER ===
 st.markdown("---")
 st.markdown("**Built by Nadine Squires** — [quantara.earth](https://quantara.earth)")
+st.caption("Data: ENTSO-E Transparency Platform (public access)")
