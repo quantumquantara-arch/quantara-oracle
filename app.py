@@ -2,13 +2,14 @@ import streamlit as st
 import requests
 import pandas as pd
 import numpy as np
+import os
 
 st.set_page_config(page_title="Quantara Oracle", layout="centered")
 st.title("Quantara Oracle")
 st.markdown("*Live coherence audit of the U.S. energy grid*")
 
 # === GET EIA DATA ===
-API_KEY = st.secrets["EIA_KEY"]
+API_KEY = os.environ.get("EIA_KEY", "demo")
 url = f"https://api.eia.gov/v2/electricity/rto/region-data/data/?api_key={API_KEY}&frequency=hourly&data[0]=value&facets[region-id][]=US48&start=2025-11-10T00&sort[0][column]=period"
 
 try:
