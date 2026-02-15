@@ -1,0 +1,3 @@
+def integrate_financial(input_data):
+    # From quantara-financial-architecture: Tie to models
+    return input_data  # Add CCE/TEB logic
