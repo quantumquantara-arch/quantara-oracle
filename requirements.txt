@@ -19,3 +19,7 @@ altair>=5.0.0
 
 # Logging & utilities
 python-dateutil>=2.8.0
+
+Flask==2.0.1
+requests==2.26.0
+numpy==1.21.0  # For lattice/math ops
