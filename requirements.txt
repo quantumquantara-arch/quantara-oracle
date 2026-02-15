@@ -1,4 +1,21 @@
-streamlit
-pandas
-numpy
-entsoe-py
+# St. Thomas Municipal Energy Optimization System
+# Quantara Oracle — Requirements
+
+# Core
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.11.0
+
+# Dashboard
+streamlit>=1.28.0
+
+# ENTSO-E European Market Data (optional — requires API key)
+# Register at https://transparency.entsoe.eu/
+# Email transparency@entsoe.eu with subject "Restful API access"
+entsoe-py>=0.7.0
+
+# Data visualization (used by Streamlit)
+altair>=5.0.0
+
+# Logging & utilities
+python-dateutil>=2.8.0
