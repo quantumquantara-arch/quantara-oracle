@@ -747,29 +747,6 @@ A: This system is complementary to the CDM Plan 2025-2029, not a replacement. Th
 **Data Vintage:** 2024 consumption data; OEB rates effective November 1, 2024
 **Total Codebase:** 2,963 lines across 7 Python modules + Streamlit dashboard
 
-# Quantara Oracle Nexus Upgrade
-
-This repo upgrades the original Quantara Oracle to integrate features from related repositories, enhancing intelligence (e.g., predictive queries, ethical audits) and potential savings (building on the baseline $214,175 from initial coherence rebates).
-
-## Setup
-1. Install dependencies: `pip install -r requirements.txt`
-2. Run: `python app.py`
-
-## Key Enhancements
-- Added decision decomposition and time-meaning for smarter query breakdown.
-- Integrated energy orchestration for efficiency-focused responses.
-- Included temporal coherence for predictive insights.
-- Simulated photonic and wormhole for efficient routing.
-- Embedded ascii smuggler for secure data handling.
-- Enforced governance ethics in all queries.
-- Modeled spacetime lattice for scalable simulations.
-- Tied to financial models for value projections.
-- Optimized with evercycle rules for sustainability.
-- Powered by pi-phi-e loops for recursive reasoning.
-- Canonical standards ensure consistency.
-
-No fabricated data; all functions are prototypes.
-
 ---
 
 *All data in this system is sourced from official public documents. Modeled projections are clearly labeled. This system is provided as an analytical tool and does not constitute engineering advice. Professional energy auditing and engineering review is recommended before capital investments.*
