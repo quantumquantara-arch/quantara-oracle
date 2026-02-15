@@ -1,0 +1,3 @@
+def smuggle_data(input_data):
+    # From aureon-ascii-smuggler: Zero-width encoding
+    return input_data  # Add zero-width chars logic here
